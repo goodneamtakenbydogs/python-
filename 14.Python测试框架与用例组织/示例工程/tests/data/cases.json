@@ -1,0 +1,5 @@
+[
+  {"id": "ordinary", "labels": ["A"], "expected": "Report\nA\n"},
+  {"id": "upper", "labels": ["A", "B", "C"], "expected": "Report\nA\nB\nC\n"},
+  {"id": "unicode", "labels": ["示例"], "expected": "Report\n示例\n"}
+]
