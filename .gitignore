@@ -1,0 +1,27 @@
+# 本机 Python 环境与运行缓存
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.pyright/
+.ipynb_checkpoints/
+
+# 编辑器、操作系统与临时文件
+.obsidian/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+tmp/
+*.tmp
+*.log
+
+# 本地环境变量与凭证文件
+.env
+.env.*
+!.env.example
+*.pem
+*.key
