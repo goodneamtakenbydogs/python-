@@ -4,7 +4,12 @@
 
 ## 1. 建立环境并运行
 
-在本目录使用独立环境；这里有完整项目元数据，不再借用上两级仓库环境。
+在本目录使用独立环境；这里有完整项目元数据，不再借用上两级仓库环境。Windows PowerShell 可先设置以下环境变量，统一常规文本输入输出；Linux 等环境也可按相应终端语法设置同名变量。
+
+```text
+$env:PYTHONUTF8 = "1"
+$env:PYTHONIOENCODING = "utf-8"
+```
 
 ```text
 uv sync --group dev
@@ -48,9 +53,11 @@ uv run python scripts/verify_wheel.py "dist/*.whl"
 uv run python scripts/benchmark_core.py --records 1000
 ```
 
-`uv build` 生成 sdist 与 wheel；验收脚本要求通配模式恰好匹配一个 wheel。它在仓库之外创建新环境，只安装该 wheel，移除 PYTHONPATH 等来源干扰，验证实际导入位置、发行版本、console script 和 `python -m`、空输入与错误退出。构建产物和 reports 是本地生成内容，不提交。
+`uv build` 生成 sdist 与 wheel；验收脚本要求通配模式恰好匹配一个 wheel。它在仓库之外创建新环境，只安装该 wheel，移除 PYTHONPATH 等来源干扰，验证实际导入位置、发行版本、console script 和 `python -m`、空输入与错误退出。路径两侧均先解析为规范路径，避免 Windows 临时目录的短名称与长名称造成误判。构建产物和 reports 是本地生成内容，不提交。
 
 benchmark 只测当前进程的虚构记录构造与内存汇总，包括 tracemalloc 开销，不含文件读取、网络、工具安装或系统压力。测量数值随环境变化，不能用一次时间作通用性能承诺。
+
+Windows Python 3.11 在部分系统代码页下，会按系统编码读取可编辑安装的 .pth 路径记录，UTF-8 模式不一定改变这项显式编码。若中文路径导致启动失败，可将个人开发副本放到仅含 ASCII 字符的目录。CI 使用 `uv sync --frozen --group dev --no-editable` 安装普通包，后续 `uv run --frozen --no-sync` 复用该环境，避免重新切回可编辑安装；仍从当前源码构建并独立验证新的 wheel。
 
 ## 5. 模块与可选批量组件
 

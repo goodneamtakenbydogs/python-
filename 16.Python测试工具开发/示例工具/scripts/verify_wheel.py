@@ -44,7 +44,8 @@ def main(argv=None):
             cwd=root, environment=environment)
         check_import = (
             "from pathlib import Path; from importlib.metadata import version; import study_results; "
-            f"assert Path(study_results.__file__).resolve().is_relative_to(Path({str(isolated)!r})); "
+            f"assert Path(study_results.__file__).resolve().is_relative_to(Path({str(isolated)!r}).resolve()), "
+            "'installed module is outside the resolved clean environment'; "
             "assert study_results.__version__ == version('study-results-demo')"
         )
         run([str(python), "-c", check_import], cwd=root, environment=environment)
