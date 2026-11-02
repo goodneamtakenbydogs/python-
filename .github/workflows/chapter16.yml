@@ -1,0 +1,43 @@
+name: Chapter 16 example tool
+
+on:
+  push:
+    paths:
+      - '16.Python测试工具开发/**'
+      - '.github/workflows/chapter16.yml'
+  pull_request:
+    paths:
+      - '16.Python测试工具开发/**'
+      - '.github/workflows/chapter16.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    defaults:
+      run:
+        working-directory: '16.Python测试工具开发/示例工具'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync --frozen --group dev
+      - run: uv run --frozen ruff check src tests scripts
+      - run: uv run --frozen pytest -q --junitxml=reports/junit.xml
+      - run: uv build
+      - run: uv run --frozen python scripts/verify_wheel.py "dist/*.whl"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chapter16-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            16.Python测试工具开发/示例工具/reports/
+            16.Python测试工具开发/示例工具/dist/

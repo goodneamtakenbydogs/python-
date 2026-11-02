@@ -1,0 +1,3 @@
+{"case_id":"C-demo-1","status":"passed","duration":0.25}
+{"case_id":"C-demo-2","status":"failed","duration":0.5}
+{"case_id":"C-demo-3","status":"skipped","duration":0}
